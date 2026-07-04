@@ -16,11 +16,11 @@
 <meta name="msapplication-TileColor" content="#111111"/>
 <meta name="msapplication-navbutton-color" content="#111111"/>
 
-<!-- ═══ PWA MANIFEST (inline as data URI) ═══ -->
-<link rel="manifest" id="pwa-manifest"/>
+<!-- ═══ PWA MANIFEST (real static file — PWABuilder/GitHub Pages ke liye zaroori) ═══ -->
+<link rel="manifest" href="manifest.json"/>
 
 <!-- ═══ APPLE TOUCH ICONS ═══ -->
-<link rel="apple-touch-icon" id="apple-icon"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
 
 <title>Work Life Balance</title>
 <style>
@@ -958,137 +958,16 @@
 // PWA ENGINE — Service Worker + Manifest + Install
 // ═══════════════════════════════════════════════════
 
-// ── 1. MANIFEST (inline — file:// pe bhi kaam karta hai) ──
-(function setupManifest() {
-  const manifest = {
-    name: "Work Life Balance",
-    short_name: "WLB",
-    description: "Design Your Perfect Day — Personal Life OS",
-    start_url: "./",
-    display: "standalone",
-    orientation: "portrait",
-    background_color: "#0a0a0a",
-    theme_color: "#111111",
-    lang: "en-IN",
-    icons: [
-      { src: buildIcon(192, '#111', '⚖️'), sizes: "192x192", type: "image/png", purpose: "any maskable" },
-      { src: buildIcon(512, '#111', '⚖️'), sizes: "512x512", type: "image/png", purpose: "any maskable" }
-    ],
-    shortcuts: [
-      { name: "Habits", short_name: "Habits", url: "./?tab=habits", description: "Today's Habits" },
-      { name: "Dashboard", short_name: "Stats",  url: "./?tab=dashboard", description: "Stats & Charts" },
-      { name: "Journal",   short_name: "Journal", url: "./?tab=journal", description: "Daily Journal" }
-    ],
-    categories: ["productivity", "lifestyle", "health", "finance"],
-    screenshots: []
-  };
-
-  function buildIcon(size, bg, emoji) {
-    try {
-      const canvas = document.createElement('canvas');
-      canvas.width = size; canvas.height = size;
-      const ctx = canvas.getContext('2d');
-      // Background
-      ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, size, size);
-      // Rounded corners effect
-      ctx.fillStyle = '#1a1a1a';
-      const r = size * 0.18;
-      ctx.beginPath();
-      ctx.moveTo(r, 0); ctx.lineTo(size-r, 0);
-      ctx.quadraticCurveTo(size, 0, size, r);
-      ctx.lineTo(size, size-r);
-      ctx.quadraticCurveTo(size, size, size-r, size);
-      ctx.lineTo(r, size); ctx.quadraticCurveTo(0, size, 0, size-r);
-      ctx.lineTo(0, r); ctx.quadraticCurveTo(0, 0, r, 0);
-      ctx.closePath(); ctx.fill();
-      // Emoji
-      ctx.font = `${size * 0.45}px serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(emoji, size/2, size/2 + size*0.02);
-      return canvas.toDataURL('image/png');
-    } catch(e) {
-      return '';
-    }
-  }
-
-  const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
-  const url  = URL.createObjectURL(blob);
-  const link = document.getElementById('pwa-manifest');
-  if (link) link.href = url;
-
-  // Apple touch icon
-  try {
-    const canvas2 = document.createElement('canvas');
-    canvas2.width = 180; canvas2.height = 180;
-    const ctx2 = canvas2.getContext('2d');
-    ctx2.fillStyle = '#111111';
-    ctx2.fillRect(0, 0, 180, 180);
-    ctx2.font = '80px serif';
-    ctx2.textAlign = 'center';
-    ctx2.textBaseline = 'middle';
-    ctx2.fillText('⚖️', 90, 92);
-    const iconLink = document.getElementById('apple-icon');
-    if (iconLink) iconLink.href = canvas2.toDataURL('image/png');
-  } catch(e) {}
-})();
-
-// ── 2. SERVICE WORKER (offline support) ──
-const SW_CODE = `
-const CACHE = 'wlb-v14';
-const URLS  = ['./', './index.html'];
-
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(URLS).catch(()=>{}))
-  );
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))
-    )
-  );
-  self.clients.claim();
-});
-
-self.addEventListener('fetch', e => {
-  // API calls — network first
-  if (e.request.url.includes('googleapis.com') ||
-      e.request.url.includes('generativelanguage') ||
-      e.request.url.includes('wa.me')) {
-    return;
-  }
-  e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request).catch(()=>cached))
-  );
-});
-
-// Push notifications
-self.addEventListener('push', e => {
-  const data = e.data ? e.data.json() : {};
-  self.registration.showNotification(data.title || '🔔 WLB Reminder', {
-    body: data.body || 'Check your app!',
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
-    vibrate: [200, 100, 200],
-    tag: 'wlb-reminder'
-  });
-});
-`;
-
+// ── 1 & 2. MANIFEST + SERVICE WORKER ──
+// Ab ye asli static files (manifest.json, service-worker.js) use karte hain
+// isliye GitHub Pages aur PWABuilder dono ke saath sahi kaam karega.
 if ('serviceWorker' in navigator) {
-  const swBlob = new Blob([SW_CODE], {type:'application/javascript'});
-  const swUrl  = URL.createObjectURL(swBlob);
-  navigator.serviceWorker.register(swUrl, {scope: './'})
+  navigator.serviceWorker.register('service-worker.js', {scope: './'})
     .then(reg => {
       console.log('SW registered:', reg.scope);
       window._swReg = reg;
     })
-    .catch(e => console.log('SW error (normal on file://):', e.message));
+    .catch(e => console.log('SW error:', e.message));
 }
 
 // ── 3. INSTALL PROMPT HANDLER ──
