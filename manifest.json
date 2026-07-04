@@ -1,37 +1,22 @@
 {
-  "name": "Work Life Balance",
+  "name": "Work Life Balance Tracker",
   "short_name": "WLB",
-  "start_url": "/personal-life-management/",
-  "scope": "/personal-life-management/"
-  "scope": "/wlb/",
+  "description": "My Personal App",
+  "start_url": "/personal-life-management/index.html",
+  "scope": "/personal-life-management/",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#1a1a2e",
-  "theme_color": "#111111",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "/personal-life-management/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "icon-512.png",
+      "src": "/personal-life-management/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "type": "image/png"
     }
   ]
 }
