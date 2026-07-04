@@ -1,8 +1,8 @@
 {
   "name": "Work Life Balance",
   "short_name": "WLB",
-  "description": "Personal life management app - habits, money, goals, health, mood & journal tracker",
-  "start_url": "/wlb/",
+  "start_url": "/personal-life-management/",
+  "scope": "/personal-life-management/"
   "scope": "/wlb/",
   "display": "standalone",
   "orientation": "portrait",
