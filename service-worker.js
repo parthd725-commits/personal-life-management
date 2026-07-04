@@ -1,10 +1,12 @@
 const CACHE_NAME = "wlb-cache-v1"; // 🔴 naya version deploy karte waqt v1 -> v2 karo taaki purana cache clear ho
 const ASSETS_TO_CACHE = [
-  "/wlb/",
-  "/wlb/index.html",
-  "/wlb/manifest.json",
-  "/wlb/icon-192.png",
-  "/wlb/icon-512.png"
+  const ASSETS_TO_CACHE = [
+  "/personal-life-management/",
+  "/personal-life-management/index.html",
+  "/personal-life-management/manifest.json",
+  "/personal-life-management/icon-192.png",
+  "/personal-life-management/icon-512.png"
+];
 ];
 
 // Install: cache core files
@@ -46,7 +48,7 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
           return res;
         })
-        .catch(() => caches.match(req).then((res) => res || caches.match("/wlb/index.html")))
+        .catch(() => caches.match(req).then((res) => res || caches.match("/personal-life-management/index.html")))
     );
     return;
   }
